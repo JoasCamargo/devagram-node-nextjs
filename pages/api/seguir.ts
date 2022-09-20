@@ -38,7 +38,7 @@ const endpointSeguir =
             }else{
                 const seguidor = {
                     usuarioId : usuarioLogado._id,
-                    usuarioSeguidoId : usuarioASerSeguido._idcle
+                    usuarioSeguidoId : usuarioASerSeguido._id
                 };
                 await SeguidorModel.create(seguidor);
 
