@@ -6,6 +6,7 @@ import { UsuarioModel } from '../../models/UsuarioModel';
 import { json } from 'stream/consumers';
 import nc from 'next-connect';
 import {upload, uploadImagemCosmic} from '../../services/uploadImagemCosmic'
+import { politicaCORS } from '../../middlewares/politicaCORS';
 
 const handlear = nc ()
     .use(upload.single('file'))
@@ -50,7 +51,18 @@ const handlear = nc ()
             console.log(e);
         }
             return res.status(400).json({erro : 'Não foi possivel obter dados do usuario'})
-        });
+        })
+
+        .delete(async (req : NextApiRequest, res: NextApiResponse<RespostaPadraoMsg | any>) =>{
+            try{
+                const {userId} = req?.query;
+                const usuario = await UsuarioModel.findById(userId);
+                return res.status(200).json(usuario);
+            }catch(e){
+                console.log(e);
+            }
+                return res.status(400).json({erro : 'Não foi possivel obter dados do usuario'})
+            });
 
 export const config  = {
     api : {
@@ -58,4 +70,4 @@ export const config  = {
     }
 }      
 
-export default validarTokenJWT(conectarMongoDB(handlear));
+export default politicaCORS(validarTokenJWT(conectarMongoDB(handlear)));
